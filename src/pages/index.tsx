@@ -7,9 +7,11 @@ import Link from "@mui/material/Link";
 import viteLogo from "../../public/vite.svg";
 import reactLogo from "@/assets/react.svg";
 import "../logo.css";
+import { useNavigate } from "react-router";
 
 const Page: React.FC = () => {
   const [count, setCount] = useState(0);
+  const navigate = useNavigate();
 
   return (
     <Stack alignItems="center" justifyContent="center" height="100vh">
@@ -27,7 +29,10 @@ const Page: React.FC = () => {
       <Stack p={4} alignItems="center" rowGap={2}>
         <Button
           variant="contained"
-          onClick={() => setCount((count) => count + 1)}
+          onClick={() => {
+            setCount((count) => count + 1);
+            navigate("/recorder");
+          }}
         >
           count is {count}
         </Button>

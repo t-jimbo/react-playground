@@ -3,9 +3,11 @@ import Button from "@mui/material/Button";
 import { useContext } from "react";
 import { RecorderContext } from "@/features/recorder/context";
 import Link from "@mui/material/Link";
+import { useNavigate } from "react-router";
 
 export const Page: React.FC = () => {
   const { isRecording, onStart, onStop, srcURL } = useContext(RecorderContext);
+  const navigate = useNavigate();
 
   return (
     <Stack rowGap={2}>
@@ -20,7 +22,10 @@ export const Page: React.FC = () => {
 
       <audio controls src={srcURL} />
 
-      <Link href="/">TOPへ</Link>
+      <Stack direction="row" alignItems="center">
+        <Link href="/">TOPへ(aタグ)</Link>
+        <Button onClick={() => navigate("/")}>TOPへ(react-router)</Button>
+      </Stack>
     </Stack>
   );
 };
