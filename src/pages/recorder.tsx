@@ -1,55 +1,28 @@
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
-import { useEffect, useState } from "react";
+import { useContext } from "react";
+import { RecorderContext } from "@/features/recorder/context";
+import Link from "@mui/material/Link";
 
 export const Page: React.FC = () => {
-  const [recorder, setRecorder] = useState<MediaRecorder | null>();
-  const [recording, setReconding] = useState(false);
-  const [src, setSrc] = useState<string>();
-  useEffect(() => {
-    (async () => setRecorder(await init()))();
-  }, []);
-  if (!recorder) return <div>audio/webm is not supported</div>;
-
-  const handlerStart = () => {
-    recorder.start();
-    setReconding(true);
-  };
-
-  const handleStop = () => {
-    recorder.stop();
-    setReconding(false);
-  };
-
-  recorder.addEventListener("dataavailable", (e) => {
-    setSrc(URL.createObjectURL(e.data));
-  });
+  const { isRecording, onStart, onStop, srcURL } = useContext(RecorderContext);
 
   return (
-    <Stack>
+    <Stack rowGap={2}>
       <Stack direction="row">
-        <Button onClick={handlerStart} disabled={recording}>
+        <Button onClick={onStart} disabled={isRecording}>
           Start
         </Button>
-        <Button onClick={handleStop} disabled={!recording}>
+        <Button onClick={onStop} disabled={!isRecording}>
           Stop
         </Button>
       </Stack>
 
-      <audio controls src={src} />
+      <audio controls src={srcURL} />
+
+      <Link href="/">TOPへ</Link>
     </Stack>
   );
 };
 
 export default Page;
-
-const init = async () => {
-  const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-  if (!MediaRecorder.isTypeSupported("audio/webm")) {
-    console.warn("audio/webm is not supported");
-    return null;
-  }
-  return new MediaRecorder(stream, {
-    mimeType: "audio/webm",
-  });
-};
